@@ -1,0 +1,140 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stddef.h>
+
+typedef long long ll;
+
+typedef struct node
+{
+    int val;
+    struct node *next;
+} node;
+
+node *reverseList(node *head, node *prev, node *cur, node *next)
+{
+    while (cur != NULL)
+    {
+        next = cur->next;
+        cur->next = prev;
+        prev = cur;
+        cur = next;
+    }
+    return prev; // returns the new head
+}
+
+node *insertNodeAtPos(int val, node *curr, node *head, int pos)
+{
+    node *ins = (node *)malloc(sizeof(node));
+    ins->val = val;
+    if (pos == 0)
+    {
+        ins->next = head;
+        return ins;
+    }
+    if (pos == 1)
+    {
+        ins->next = curr->next;
+        curr->next = ins;
+        return head;
+    }
+    else if (curr == NULL)
+    {
+        printf("Error: End of list reached.\n");
+        return head;
+    }
+    else
+    {
+        return insertNodeAtPos(val, curr->next, head, pos - 1);
+    }
+}
+
+node *deleteNodeVal(node *head, node *curr, int val)
+{
+    if (curr == head && val == head->val)
+    {
+        node *newh = head->next;
+        free(head);
+        return newh;
+    }
+    else if (curr->next != NULL && curr->next->val == val)
+    {
+        node *temp = curr->next->next;
+        free(curr->next);
+        curr->next = temp;
+        return head;
+    }
+    else if (curr == NULL)
+    {
+        return head;
+    }
+    else
+    {
+        return deleteNodeVal(head, curr->next, val);
+    }
+}
+
+node *deleteNodeAtPos(node *head, node *curr, int pos)
+{
+    if (pos == 0)
+    {
+        node *newh = head->next;
+        free(head);
+        return newh;
+    }
+    if (pos == 1)
+    {
+        if (curr->next != NULL)
+        {
+            node *temp = curr->next->next;
+            free(curr->next);
+            curr->next = temp;
+            return head;
+        }
+        else
+        {
+            return head;
+        }
+    }
+    else if (curr == NULL)
+    {
+        return head;
+    }
+    else
+    {
+        return deleteNodeAtPos(head, curr->next, pos - 1);
+    }
+}
+
+void printLinkedList(node *curr)
+{
+    if (curr == NULL)
+    {
+        printf("END\n");
+        return;
+    }
+    else
+    {
+        printf("%d->", curr->val);
+        return printLinkedList(curr->next);
+    }
+}
+
+int main()
+{
+    node *head = NULL;
+    head = (node *)malloc(sizeof(node));
+    head->val = 0;
+    head->next = NULL;
+    for (int i = 0; i < 9; i++)
+    {
+        head = insertNodeAtPos(i + 3, head, head, i);
+    }
+    printLinkedList(head);
+    // The lines below must throw an error.
+    insertNodeAtPos(69420, head, head, 69);
+    //////////////////////////////////////
+    head = deleteNodeVal(head, head, 0);
+    printLinkedList(head);
+    head = reverseList(head, NULL, head, head->next);
+    printLinkedList(head);
+}

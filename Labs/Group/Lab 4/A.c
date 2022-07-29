@@ -1,25 +1,30 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stddef.h>
 
-typedef struct node{
+typedef struct node
+{
     int val;
-    struct node* next;
+    struct node *next;
 } node;
 
-void rsort(node* head){
-    node* curr1 = head;
-    while (curr1!=NULL){
-        node* curr = head;
-        while(curr->next!= NULL){
-            if ((curr-> val) > (curr->next-> val)){
-                int tmp = curr-> val;
-                curr-> val = curr-> next-> val;
-                curr-> next->val = tmp;
+void rsort(node *head)
+{
+    node *curr1 = head;
+    while (curr1 != NULL)
+    {
+        node *curr = head;
+        while (curr->next != NULL)
+        {
+            if ((curr->val) > (curr->next->val))
+            {
+                int tmp = curr->val;
+                curr->val = curr->next->val;
+                curr->next->val = tmp;
             }
             curr = curr->next;
         }
-        curr1 = curr1-> next;
+        curr1 = curr1->next;
     }
 }
 
@@ -35,51 +40,62 @@ void rsort(node* head){
 //     merge(head, l, m, r);
 // }
 
-void insertNodeAtPos(node*new, node* curr, int pos){
-    if(pos==1){
-        new->next = curr-> next-> next;
-        curr-> next = new;
+void insertNodeAtPos(node *new, node *curr, int pos)
+{
+    if (pos == 1)
+    {
+        new->next = curr->next->next;
+        curr->next = new;
         return;
     }
-    else{
-        return insertNodeAtPos(new, curr-> next, pos-1);
+    else
+    {
+        return insertNodeAtPos(new, curr->next, pos - 1);
     }
 }
 
-void insertNode(node*new, node* curr){
-    if(curr-> next == NULL){
-        curr-> next = new;
+void insertNode(node *new, node *curr)
+{
+    if (curr->next == NULL)
+    {
+        curr->next = new;
         return;
     }
-    else{
-        return insertNode(new, curr-> next);
+    else
+    {
+        return insertNode(new, curr->next);
     }
 }
 
-void printList(node* curr){
-    if (curr==NULL){
+void printList(node *curr)
+{
+    if (curr == NULL)
+    {
         printf("\n");
         return;
     }
-    printf("%d ", curr-> val);
-    printList(curr-> next);
+    printf("%d ", curr->val);
+    printList(curr->next);
 }
 
-int main(){
+int main()
+{
     int n;
     scanf("%d", &n);
-    node* head = (node*)malloc(sizeof(node));
-    head-> val = 0;
-    head-> next = NULL;
-    for (int i=0; i<n; i++){
-        int x; scanf("%d", &x);
-        node* new = (node*)malloc(sizeof(node));
-        new-> val = x;
-        new-> next = NULL;
+    node *head = (node *)malloc(sizeof(node));
+    head->val = 0;
+    head->next = NULL;
+    for (int i = 0; i < n; i++)
+    {
+        int x;
+        scanf("%d", &x);
+        node *new = (node *)malloc(sizeof(node));
+        new->val = x;
+        new->next = NULL;
         insertNode(new, head);
     }
-    node* tmp = head;
-    head = head-> next;
+    node *tmp = head;
+    head = head->next;
     free(tmp);
     rsort(head);
     // mergesort(head, 0, n-1);
