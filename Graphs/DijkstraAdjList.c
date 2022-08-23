@@ -74,15 +74,15 @@ void addEdge(graph *g, int src, int dest, ll weight)
     // }
 }
 
-int minDist(ll updDist[][2], int vset[], int v)
+int minDist(ll updDist[], int vset[], int v)
 {
     int minval = __INT_MAX__;
     static int minInd = -1;
     for (int i = 0; i < v; i++)
     {
-        if (vset[i] == 0 && updDist[i][1] < minval)
+        if (vset[i] == 0 && updDist[i] < minval)
         {
-            minval = updDist[i][1];
+            minval = updDist[i];
             minInd = i;
         }
     }
@@ -104,23 +104,20 @@ ll connected(graph *g, int u, int v)
 void dijkstra(graph *g, int src)
 {
     int n = g->n;
-    ll updDist[n][2];
+    ll updDist[n];
     int vset[n];
     for (int i = 0; i < n; i++)
     {
-        updDist[i][0] = INT_MAX;
-        updDist[i][1] = INT_MAX;
+        updDist[i] = __INT_MAX__;
         vset[i] = 0;
     }
     node *temp = g->adjList[src];
     while (temp != NULL)
     {
-        updDist[temp->vertex][0] = temp->weight;
-        updDist[temp->vertex][1] = (ll)(temp->weight / 2);
+        updDist[temp->vertex] = temp->weight;
         temp = temp->next;
     }
-    updDist[src][0] = 0;
-    updDist[src][1] = 0;
+    updDist[src] = 0;
     for (int count = 0; count < n - 1; count++)
     {
         int u = minDist(updDist, vset, n);
@@ -132,38 +129,42 @@ void dijkstra(graph *g, int src)
                 ll a = connected(g, u, v);
                 if (a != 0)
                 {
-                    if (updDist[u][0] + a < updDist[v][0])
+                    if (updDist[u] + a < updDist[v])
                     {
-                        updDist[v][0] = updDist[u][0] + a;
-                    }
-                    if (updDist[u][1] + a < updDist[v][1])
-                    {
-                        updDist[v][1] = updDist[u][1] + a;
-                    }
-                    if (updDist[u][0] + (ll)(a / 2) < updDist[v][1])
-                    {
-                        updDist[v][1] = updDist[u][0] + (ll)(a / 2);
+                        updDist[v] = updDist[u] + a;
                     }
                 }
             }
         }
     }
-    printf("%lld", updDist[g->n - 1][1]);
+    printf("%lld", updDist[g->n - 1]);
 }
+
+// void printGraph(graph *g)
+// {
+//     for (int i = 0; i < g->n; i++)
+//     {
+//         printf("%d: ", i);
+//         for (int j = 0; j < g->n; j++)
+//         {
+//             if (g->adjMatrix[i][j] == 1)
+//             {
+//                 printf("%d ", j);
+//             }
+//         }
+//         printf("\n");
+//     }
+// }
 
 int main()
 {
-    int n;
-    int m;
-    scanf("%d %d", &n, &m);
-    graph *g = graphGen(n + 1);
-    for (int i = 0; i < m; i++)
-    {
-        int src, dest;
-        ll weight;
-        scanf("%d %d %lld", &src, &dest, &weight);
-        addEdge(g, src, dest, weight);
-    }
-    dijkstra(g, 1);
+    graph *g = graphGen(5);
+    addEdge(g, 0, 1, 5);
+    addEdge(g, 0, 2, 10);
+    addEdge(g, 1, 2, 20);
+    addEdge(g, 1, 3, 30);
+    addEdge(g, 2, 3, 30);
+    addEdge(g, 3, 4, 10);
+    dijkstra(g, 0);
     return 0;
 }

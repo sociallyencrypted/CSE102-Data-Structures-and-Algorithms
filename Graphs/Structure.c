@@ -95,10 +95,10 @@ void printGraph(graph *graph)
     for (int i = 0; i < graph->n; i++)
     {
         node *temp = graph->adjList[i];
-        printf("%d", i);
+        printf("%d: ", i);
         while (temp)
         {
-            printf(" -> %d", temp->vertex);
+            printf("%d ", temp->vertex);
             temp = temp->next;
         }
         printf("\n");

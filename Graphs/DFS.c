@@ -59,10 +59,7 @@ void addEdge(graph *g, int src, int dest)
 {
     node *newNode = nodeGen(dest);
     node *temp = g->adjList[src];
-    if (temp == NULL)
-    {
-        g->adjList[src] = newNode;
-    }
+
     else
     {
         while (temp->next != NULL)
